@@ -1,7 +1,7 @@
 pragma solidity >=0.8.0 <0.8.18;
 
 /* 
-    In this variant the owner is automatically added to the lottery without fee, upon deployment.
+    In this variant anybody can pick a player if there are atleast 10 participants.
  */
 
 contract Lottery {
@@ -10,7 +10,6 @@ contract Lottery {
 
     constructor() {
         owner = msg.sender;
-        players.push(payable(owner));
     }
 
     receive() external payable {
@@ -44,8 +43,7 @@ contract Lottery {
     }
 
     function rewardWinner() public {
-        require(msg.sender == owner);
-        require(players.length >= 3, "Too few players");
+        require(players.length >= 10, "Too few players");
 
         uint i = random() % players.length;
         address payable winner = players[i];
