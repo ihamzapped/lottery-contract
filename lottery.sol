@@ -18,7 +18,6 @@ contract Lottery {
     }
 
     function getBalance() public view returns (uint) {
-        require(msg.sender == owner);
         return address(this).balance;
     }
 
