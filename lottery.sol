@@ -1,7 +1,7 @@
 pragma solidity >=0.8.0 <0.8.18;
 
 /* 
-    In this variant anybody can pick a player if there are atleast 10 participants.
+    In this variant owner gets 10% fee when the lottery is ended.
  */
 
 contract Lottery {
@@ -43,11 +43,17 @@ contract Lottery {
     }
 
     function rewardWinner() public {
-        require(players.length >= 10, "Too few players");
+        require(msg.sender == owner);
+        require(players.length >= 3, "Too few players");
+
+        uint bal = getBalance();
+        uint fee = (bal * 10 wei) / 100 wei;
 
         uint i = random() % players.length;
         address payable winner = players[i];
-        winner.transfer(getBalance());
+
+        winner.transfer(bal - fee);
+        payable(owner).transfer(fee);
 
         // Reset Lottery
         players = new address payable[](0);
